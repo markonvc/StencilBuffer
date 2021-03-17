@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Mesh } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 
 const Feature = () => { 
@@ -23,10 +23,8 @@ const Feature = () => {
   
     })
   
-    const loader =  new FBXLoader();
-    const path = "src/assets/model.fbx";
-    // geometry.translate( + 1/2, - 1/2, 0);
-  
+    var loader =  new FBXLoader();
+    var path = "https://configurator.mag.archi/media/wvklcqwq/r-5-1.fbx";
     var color = new THREE.Color(0xFF0050);
     var mat = new THREE.MeshBasicMaterial({ color: color });
     // let geometry3 = new THREE.PlaneGeometry(1.5, 1.5, 1.5);
@@ -34,14 +32,19 @@ const Feature = () => {
     // scene.add(mesh)
   
     loader.load(path, (model) => {
-  
-        model.scene.traverse((child) => {
-            child.material = mat;
-            mat.transparent = true;
-            mat.opacity = 0.7;
-  
+        console.log(model);
+        model.visible = true;  
+        model.children.forEach( function (child) {
+            // console.log(child);
+
+            if(child.isMesh) {
+                console.log(child);
+                child.material = mat;
+                mat.transparent = true;
+                mat.opacity = 0.7;
+                
+            }
             
-  
             // child.onBeforeRender = renderer => {
             //     const gl = renderer.getContext();
             //     gl.enable(gl.STENCIL_TEST);
@@ -57,9 +60,11 @@ const Feature = () => {
             //     gl.stencilFunc(gl.ALWAYS, 1, 0xff);
             //     gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
             // };
-
-            scene.add(child);
+        scene.add(child); 
+        console.log(scene);   
+            
         });
+       
     });    
 
      
