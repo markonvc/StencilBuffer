@@ -59,63 +59,69 @@ const Feature = () => {
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    var visibleColor = new THREE.Color(0xff0000)
+    var visibleColor = new THREE.Color("white")
     var hiddenColor = new THREE.Color(0x000000)
-
     const outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
     outlinePass.edgeStrength = 4;
     outlinePass.edgeThickness = 1;
     outlinePass.visibleEdgeColor = (visibleColor);
     outlinePass.hiddenEdgeColor = (hiddenColor);
-    // outlinePass.selectedObjects = object;
-    composer.addPass( outlinePass );
+    outlinePass.enabled = true;
+    var obj = [];
+    obj.push(mesh);
+    outlinePass.selectedObjects = obj;
+    var visible = true;
+    outlinePass.changeVisibilityOfSelectedObjects(visible)
+    console.log(obj[0]);
+    composer.addPass(outlinePass);
    
 
     const effectFXAA = new ShaderPass( FXAAShader );
                 effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
                 composer.addPass( effectFXAA );
 
-    var selectedObjects;
+    // var selectedObjects;
 
-    renderer.domElement.addEventListener( 'pointermove', onPointerMove );
+    // renderer.domElement.addEventListener( 'pointermove', onPointerMove );
 
-    function onPointerMove( event ) {
+    // function onPointerMove( event ) {
 
-        if ( event.isPrimary === false ) return;
+    //     if ( event.isPrimary === false ) return;
 
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    //     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    //     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-        checkIntersection();
+    //     checkIntersection();
 
-    }
+    // }
 
-    function addSelectedObject( object ) {
+    // function addSelectedObject( object ) {
 
-        selectedObjects = [];
-        selectedObjects.push( object );
+    //     selectedObjects = [];
+    //     selectedObjects.push( object );
 
-    }
+    // }
 
-    function checkIntersection() {
+    // function checkIntersection() {
 
-        raycaster.setFromCamera( mouse, camera );
+    //     raycaster.setFromCamera( mouse, camera );
 
-        const intersects = raycaster.intersectObject( scene, true );
+    //     const intersects = raycaster.intersectObject( scene, true );
 
-        if ( intersects.length > 0 ) {
-            console.log("presreteni")
-            var selectedObject = intersects[ 0 ].object;
-            addSelectedObject( selectedObject );
-            outlinePass.selectedObjects = selectedObjects;
-            console.log(outlinePass);
+    //     if ( intersects.length > 0 ) {
+    //         console.log("presreteni")
+    //         var selectedObject = intersects[ 0 ].object;
+    //         addSelectedObject( selectedObject );
+    //         // outlinePass.selectedObjects = selectedObjects;
+    //         console.log(selectedObjects);
+    //         // console.log(outlinePass);
 
-        } else {
+    //     } else {
 
-            outlinePass.selectedObjects = [];
+    //         outlinePass.selectedObjects = [];
 
-        }   
-    }         
+    //     }   
+    // }         
 
 
 
