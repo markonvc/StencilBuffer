@@ -61,7 +61,7 @@ const Feature = () => {
 
 
     var color = new THREE.Color(255, 0, 0);
-    var mat = new THREE.MeshBasicMaterial({ color: color});
+    var mat = new THREE.MeshBasicMaterial({ color: color, opacity: 0.3, transparent: true});
     let geometry3 = new THREE.BoxGeometry( 2, 2, 2 );
     var mesh = new THREE.Mesh(geometry3, mat); 
     // mesh.material. = 0; 
