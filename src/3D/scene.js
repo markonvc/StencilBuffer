@@ -9,74 +9,107 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import {OutlineEffect} from 'three/examples/jsm/effects/OutlineEffect'
 
+
 const Feature = () => { 
     const canvas = document.getElementById("canvas");
-  
-    var scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000)
-    camera.position.z = 5;
 
+    let scene = new THREE.Scene();
 
-  
-    let renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+    let camera = new THREE.PerspectiveCamera(
+        100,
+        // window.innerWidth / window.innerHeight,
+        1.777777,
+        0.1,
+        2000
+      );
+      camera.setFocalLength(35)
+      // camera.lookAt(new Vector3(0.10593, -2.0524, 0));
+      
+      // This is where the camera position is hardcoded to align the hotspots
+      // camera.position.copy(
+      //   new Vector3(22.612559451406984, 30.53181744066928, 45.523622716900114)
+      //   );
+      camera.position.copy(
+        new THREE.Vector3(10, 10, 10)
+      );
+      camera.lookAt(new THREE.Vector3(0,0,0));
+      camera.updateProjectionMatrix();
+
+    let renderer = new THREE.WebGLRenderer({canvas, antialias: true, alpha: true});
     renderer.setClearColor("black");
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-  
     document.body.appendChild(renderer.domElement);
-  
+
     window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
-  
+
         camera.updateProjectionMatrix();    
-  
+
     })
 
-    var controls = new OrbitControls( camera, renderer.domElement );
-        controls.minDistance = 5;
-        controls.maxDistance = 20;
-        controls.enablePan = false;
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+    let controls = new OrbitControls( camera, renderer.domElement );
+				controls.minDistance = 5;
+				controls.maxDistance = 20;
+				controls.enablePan = false;
+				controls.enableDamping = true;
+				controls.dampingFactor = 0.05;
 
-    const geometry = new THREE.BoxGeometry( 2, 2, 2 );
-    var color = new THREE.Color(0xFF0050);
-    var mat = new THREE.MeshBasicMaterial({ color: color });
-    var mesh = new THREE.Mesh(geometry, mat);
 
+    const loader =  new FBXLoader();
+    const path = "https://configurator.mag.archi/media/gnunm1ll/kubusi-2-1.fbx";
+
+
+    var color = new THREE.Color(255, 0, 0);
+    var mat = new THREE.MeshBasicMaterial({ color: color});
+    let geometry3 = new THREE.BoxGeometry( 2, 2, 2 );
+    var mesh = new THREE.Mesh(geometry3, mat); 
+    // mesh.material. = 0; 
+    console.log(mesh)
     scene.add(mesh);
-    
-    var effect = new OutlineEffect( renderer, {
-         	defaultThickness: 0.004,
-        	defaultColor: [ 0, 0, 1 ],
-         	defaultAlpha: 0.8,
-         	defaultKeepAlive: true
-         } );
-    
-    function rende() {
-    
-    effect.render( scene, camera );
-    
-     }
 
-    // const effectFXAA = new ShaderPass( FXAAShader );
-    // effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
-    // renderer.addPass( effectFXAA );
-   
+    var color2 = new THREE.Color(0, 255, 255);
+    var mat2 = new THREE.MeshBasicMaterial({ color: color2});
+    let geometry2 = new THREE.BoxGeometry( 2, 2, 2 );
+    var mesh2 = new THREE.Mesh(geometry2, mat2); 
+    mesh2.position.x = 0.5;
+    mesh2.position.z = -3;
+    mesh2.position.y = 0
+    scene.add(mesh2);
 
-     
-    let light = new THREE.DirectionalLight(0xddffdd, 0.6)
-    light.position.set(1,1,1);
-    scene.add(light);
+
+    // loader.load(path, (model) => {
+    //     model.visible = true;
+    //     console.log(model)
+    //     model.traverse(function (child) {
+    //         console.log(child)
+    //         if(child.isMesh){
+    //         child.material = mat;
+    //         mat.transparent = true;
+    //         mat.opacity = 0;
+    //         // scene.add(child);
+    //         }
+    //         console.log(scene)
+    //     });
+      
+       
+    // });    
+
+  
+
+
+    let light = new THREE.PointLight(0xFFFFFF, 1, 500)
+    light.position.set(10,0,25);
+    // scene.add(light);
 
     var render = function(){
+        
+     
         requestAnimationFrame(render);
-        rende();
-       
+        renderer.render(scene, camera);
     }
 
     render();
-  
-  }
+
+}
   export default Feature;
